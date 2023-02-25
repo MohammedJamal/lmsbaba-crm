@@ -1,0 +1,1 @@
+{"menu":{"lead":"Leads Alias","company":"Companies Alias","user":"Users Alias","product":"Products Alias","vendor":"Vendors Alias","purchase_order":"Purchase Order Alias","renewal":"Renewal\/ AMC Alias"}}

@@ -1,0 +1,837 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');?>
+<!doctype html>
+<html lang="en">   
+<head>
+ 
+ <link rel="stylesheet" href="<?php echo assets_url() ?>css/progres-bar.css">
+ <script src="<?php echo assets_url() ?>js/player.js"></script>
+  <link rel="stylesheet" href="<?php echo assets_url() ?>css/picker.css">
+  <link  href="<?php echo assets_url() ?>css/hotel-datepicker.css" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo assets_url() ?>css/dashboard_style.css"/>
+  <link rel="stylesheet" href="<?php echo assets_url() ?>css/dashboard_v2.css"/> <!--FOR NEW DASHBOARD-->
+  <?php $this->load->view('admin/includes/head'); ?>
+</head>
+<body>
+<div class="app full-width expanding">    
+      <div class="off-canvas-overlay" data-toggle="sidebar"></div>
+      <div class="sidebar-panel">       
+        <?php $this->load->view('admin/includes/left-sidebar'); ?>
+      </div> 
+      <div class="app horizontal top_hader_dashboard">
+            <?php $this->load->view('admin/includes/header'); ?>
+      </div>      
+
+    <div class="main-panel">         
+        <div class="min_height_dashboard"></div>         
+        <div class="main-content">  
+          <div class="content-view">
+            <input type="hidden" id="filter_selected_user_id" value="<?php echo $selected_user_id; ?>">
+            <input type="hidden" id="filter_summery_count_or_percentage" value="C">
+            <input type="hidden" id="filter_leads_vs_orders_report_group_by" value="M">
+            <input type="hidden" id="filter_daily_sales_report_group_by" value="D">
+            <input type="hidden" id="filter_business_report_weekly_period" value="<?php echo date("Y-m"); ?>">
+            <input type="hidden" id="filter_business_report_monthly_period" value="<?php echo date("Y"); ?>">   
+
+
+            <div class="white-box">         
+              <h2 class="dashboard-title">
+                <div class="full-left">
+                  <div class="pull-left">
+                    <div class="dashboard_nav_menu">
+                      <a href="javascript:;" data-toggle="sidebar" class="toggle-offscreen">
+                        <i class="material-icons">menu</i>
+                      </a>
+                    
+                    </div>
+                    DASHBOARD
+                  </div>
+                  <div class="pull-left tree-holder">                    
+                    <div id="" class="default-scoller">                      
+                      <?php echo $user_list_treeview; ?>            
+                    </div>                  
+                  </div>
+
+                  <div class="pull-left manager-report-holder">
+                     <?php echo $manager_list_treeview; ?> 
+                     <!-- <button class="btn btn-primary dal-green-style"><i class="fa fa-angle-down" aria-hidden="true"></i> Manager's Dashboard</button> -->
+                  </div>
+
+                  
+
+
+                  
+                 
+                  <div class="pull-right mobile-full">
+                    <div class="dashboard-right">
+                      <div class="left">Number</div>
+                      <label class="switch_dashboard">
+                        <input type="checkbox" name="is_count_or_percentage" id="is_count_or_percentage">
+                        <span class="slider round"></span>
+                      </label>
+                      <div class="right">Percent</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="full_selected_filter_div" style="display: block;"><span>Report For:</span> <font id="report_applied_for_div"></font></div>
+              </h2>
+              <div class="pai-holder small-pai" id="dashboard_summery_count_div"></div>
+            </div>
+            
+            
+            
+            <!-- new dashboard start -->
+               <div class="row mb-30">
+                  <div class="col-md-4">
+                     <div class="white-box pa-0">
+                        <div class="w-new-header text-uppercase justify-content-between">
+                           This Month
+                           <!-- <a href="JavaScript:void(0)" class="cal-icon-right display_date" for=""><img src="<?php echo assets_url() ?>images/cal-icon-right.png"></a> -->
+                           <ul class="pull-right right">                  
+                              <li>  
+                                 <select class="blue-select min-w-200" id="thisMonth_lrsc">
+                                    <?php if(count($get_months)){ ?>
+                                       <?php foreach($get_months AS $my_k=>$my_v){ ?>
+                                          <option value="<?php echo $my_k; ?>" <?php if($my_k==date("Y-m")){echo 'selected';} ?>><?php echo $my_v; ?></option>
+                                       <?php } ?>
+                                    <?php } ?>
+                                 </select>      
+                              </li>
+                           </ul>
+                        </div>
+                        <div class="w-new-body fix-height-378 position-relative" id="show_this_month_data">
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                     <div class="white-box pa-0">
+                        <div class="w-new-header text-uppercase justify-content-between">
+                           Lead Pipeline
+                        </div>
+                        <div class="w-new-body fix-height-378 position-relative content" id="show_lead_pipeline_data">
+                           
+                        </div>
+                     </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                     <div class="white-box pa-0">
+                        <div class="w-new-header text-uppercase justify-content-between">
+                           Opportunity
+                        </div>
+                        <div class="w-new-body fix-height-378 position-relative" id="show_opportunity_data">
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="row mb-30">
+                  
+                  <div class="col-md-4">
+                     <div class="white-box pa-0 same-height">                                                                     
+                        <div class="w-chart-holder" id="show_financial_review_data"></div>                        
+                        <div class="w-new-header justify-content-center text-uppercase">Financial Review <a href="javascript: void(0);" id="fr_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a></div> 
+                     </div>
+                  </div>
+
+                  <div class="col-md-4">
+                     <div class="white-box pa-0 same-height two-chart-height">                        
+                        <div class="w-chart-holder pb-0 pt-10 fix-height-256" id="show_sales_orders_data"></div>   
+                        <div class="w-new-header justify-content-center text-uppercase">Sales Order <a href="javascript: void(0);" id="so_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a></div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-4">
+                     <div class="white-box pa-0 same-height three-chart-height">                        
+                        <div class="w-chart-holder pb-0 pt-10" id="show_leads_opportunity_data"></div>                                                
+                        <div class="w-new-header justify-content-center text-uppercase">Lead Generation <a href="javascript: void(0);" id="lg_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a></div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-12">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">Sales Pipeline</h2>                           
+                        </div>
+                        <div id="show_sales_pipeline_data"></div>
+                        <div class="footer-table">
+                           <div class="footer-right">
+                                 <a href="javascript: void(0);" id="sp_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                                 
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-12">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">User Activity Report <small id="show_daterange_html_uar_v2">( Last 7 Days )</small></h2>
+                           <ul class="pull-right right">                  
+                              <li>  
+                                 <select class="blue-select min-w-200" id="date_range_pre_define_uar_v2">
+                                    <option value="">Select a Time Period</option>
+                                    <option value="TODAY" data-text="Today">Today</option>
+                                    <option value="YESTERDAY" data-text="Yesterday">Yesterday</option>
+                                    <option value="LAST7DAYS" data-text="Last 7 Days" selected="">Last 7 Days</option>
+                                    <option value="LAST15DAYS" data-text="Last 15 Days">Last 15 Days</option>
+                                    <option value="LAST30DAYS" data-text="Last 30 Days">Last 30 Days</option>
+                                    <!-- <option value="TILLDATE" data-text="All Time">All Time</option> -->
+                                 </select>      
+                              </li>
+                              <li>
+                                 <a href="" class="open-calendar" data-target="leads-quality-chart-time"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                 <input type="hidden" class="myDatepicker" name="" id="date_range_user_define_uar_v2">
+                                 <input type="hidden" id="date_range_user_define_from_uar_v2" value="">
+                                 <input type="hidden" id="date_range_user_define_to_uar_v2" value="">
+                              </li>
+                           </ul>
+                        </div>
+                        <div id="show_user_activity_report_data"></div>
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="uar_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>
+                        
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-12">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">Daily Sales Report <small id="show_daterange_html_dsr">( Last 7 Days )</small></h2>
+                           <ul class="pull-right right">                  
+                              <li>  
+                                 <select class="blue-select min-w-200" id="date_range_pre_define_dsr">
+                                    <option value="">Select a Time Period</option>
+                                    <option value="TODAY" data-text="Today">Today</option>
+                                    <option value="YESTERDAY" data-text="Yesterday">Yesterday</option>
+                                    <option value="LAST7DAYS" data-text="Last 7 Days" selected="">Last 7 Days</option>
+                                    <option value="LAST15DAYS" data-text="Last 15 Days">Last 15 Days</option>
+                                    <option value="LAST30DAYS" data-text="Last 30 Days">Last 30 Days</option>
+                                    <!-- <option value="TILLDATE" data-text="All Time">All Time</option> -->
+                                 </select>      
+                              </li>
+                              <li>
+                                 <a href="" class="open-calendar" data-target="leads-quality-chart-time"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                 <input type="hidden" class="myDatepicker" name="" id="date_range_user_define_dsr">
+                                 <input type="hidden" id="date_range_user_define_from_dsr" value="">
+                                 <input type="hidden" id="date_range_user_define_to_dsr" value="">
+                              </li>
+                           </ul>
+                        </div>
+                        <div id="show_daily_sales_report_data"></div>
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="dsr_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>
+
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-12">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">Leads by Source Report <small id="show_daterange_html_lbs">( All Time )</small></h2>
+                           <ul class="pull-right right">                  
+                              <li>  
+                                 <select class="blue-select min-w-200" id="date_range_pre_define_lbs">
+                                    <option value="">Select a Time Period</option>
+                                    <option value="TODAY" data-text="Today">Today</option>
+                                    <option value="YESTERDAY" data-text="Yesterday">Yesterday</option>
+                                    <option value="LAST7DAYS" data-text="Last 7 Days" >Last 7 Days</option>
+                                    <option value="LAST15DAYS" data-text="Last 15 Days">Last 15 Days</option>
+                                    <option value="LAST30DAYS" data-text="Last 30 Days">Last 30 Days</option>
+                                    <option value="TILLDATE" data-text="All Time" selected="">All Time</option>
+                                 </select>      
+                              </li>
+                              <li>
+                                 <a href="" class="open-calendar" data-target="leads-quality-chart-time"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                 <input type="hidden" class="myDatepicker" name="" id="date_range_user_define_lbs">
+                                 <input type="hidden" id="date_range_user_define_from_lbs" value="">
+                                 <input type="hidden" id="date_range_user_define_to_lbs" value="">
+                              </li>
+                           </ul>
+                        </div>
+                        <div id="show_lead_by_source_report_data"></div>
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="lbs_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+
+               <div class="row mb-30">
+                  <div class="col-md-6">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">Top 5 Selling Produts <br><small id="show_daterange_html_tsp" class="pull-left">( All Time )</small></h2>
+                           <ul class="pull-right right">                  
+                              <li>  
+                                 <select class="blue-select min-w-200" id="date_range_pre_define_tsp">
+                                    <option value="">Select a Time Period</option>
+                                    <option value="CURRENTMONTH" data-text="Current Month" >Current Month</option>
+                                    <option value="LAST3MONTHS" data-text="Last 3 Months">Last 3 Months</option>
+                                    <option value="LAST6MONTHS" data-text="Last 6 Months">Last 6 Months</option>
+                                    <option value="LAST12MONTHS" data-text="Last 1 Year">Last 1 Year</option>
+                                    <option value="TILLDATE" data-text="All Time" selected="">All Time</option>
+                                 </select>      
+                              </li>
+                              <li>
+                                 <a href="" class="open-calendar" data-target="leads-quality-chart-time"><i class="fa fa-calendar" aria-hidden="true"></i></a>
+                                 <input type="hidden" class="myDatepicker" name="" id="date_range_user_define_tsp">
+                                 <input type="hidden" id="date_range_user_define_from_tsp" value="">
+                                 <input type="hidden" id="date_range_user_define_to_tsp" value="">
+                              </li>
+                           </ul>
+                        </div>
+                        <div id="show_top_selling_produts"></div>
+                     </div>
+                  </div>
+
+                  <div class="col-md-6">
+                     <div class="white-box">
+                        <div class="table-tile">
+                           <h2 class="text-uppercase">latest 5 sales orders</h2>
+                        </div>
+
+                        <div id="show_latest_sales_orders">
+                        </div>
+
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-4">
+                     <div class="white-box">
+                        <div class="table-tile text-center">
+                           <h2 class="text-uppercase">Leads By Source</h2>
+                        </div>
+                        <div id="lead_by_source_div"></div>  
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="lbsGraph_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>
+                                              
+                     </div>
+                  </div>
+
+                  <div class="col-md-4">
+                     <div class="white-box">
+                        <div class="table-tile text-center">
+                           <h2 class="text-uppercase">Lead Lost Reasons</h2>
+                        </div>
+                        <div id="lead_by_lost_reasons_div"></div> 
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="llrGraph_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>                        
+                     </div>
+                  </div>
+
+                  <div class="col-md-4">
+                     <div class="white-box">
+                        <div class="table-tile text-center">
+                           <h2 class="text-uppercase">Unfollowed Leads By Users</h2>
+                        </div>
+                        <div id="lead_by_unfollowed_div"></div>
+                        <div class="footer-table">
+                           <div class="footer-right">
+                              <a href="javascript: void(0);" id="ulbuGraph_download" class="download-icon mr-15"><img src="<?php echo assets_url() ?>images/download-icon.png"></a>
+                           </div>
+                        </div>  
+                     </div>
+                  </div>
+               </div>
+
+               <div class="row mb-30">
+                  <div class="col-md-12">
+                     <div class="white-box">
+                        <div class="table-tile mb-25">
+                           <h2 class="text-uppercase">Top performers of month
+                           &nbsp;&nbsp;
+                              <ul class="pull-right right">                  
+                                 <li>  
+                                    <select class="blue-select min-w-200" id="top_performer_of_month">
+                                       <?php if(count($get_months)){ ?>
+                                          <?php foreach($get_months AS $my_k=>$my_v){ ?>
+                                             <option value="<?php echo $my_k; ?>" <?php if($my_k==date("Y-m")){echo 'selected';} ?>><?php echo $my_v; ?></option>
+                                          <?php } ?>
+                                       <?php } ?>
+                                    </select>      
+                                 </li>
+                              </ul>
+                           </h2>
+                           <div class="d-inline-flex">
+                              <a href="#" class="owl-btn ol-prev mr-5"><img src="<?php echo assets_url() ?>images/prev-arrow.png"></a>
+                              <a href="#" class="owl-btn ol-next"><img src="<?php echo assets_url() ?>images/next-arrow.png"></a>
+                           </div>
+                        </div>
+                        <div class="w-100" id="show_top_performers_of_month_data"></div>
+                     </div>
+                  </div>
+               </div>
+
+  
+
+      <div>&nbsp;</div>
+ 
+          </div>
+        </div>
+        <div class="content-footer">
+          <?php $this->load->view('admin/includes/footer'); ?>
+        </div>
+    </div>
+</div>
+<?php $this->load->view('admin/includes/modal-html'); ?>
+<?php $this->load->view('admin/includes/app'); ?> 
+
+
+<!-- Modal -->
+<div class="modal fade modal-fullscreen" id="indiamartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <a href="#" class="close-modal" data-dismiss="modal" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="29.25" height="29.25" viewBox="0 0 29.25 29.25">
+              <path id="Icon_ionic-ios-close-circle" data-name="Icon ionic-ios-close-circle" d="M18,3.375A14.625,14.625,0,1,0,32.625,18,14.623,14.623,0,0,0,18,3.375Zm3.705,19.92L18,19.589l-3.705,3.705a1.124,1.124,0,1,1-1.589-1.589L16.411,18l-3.705-3.705a1.124,1.124,0,0,1,1.589-1.589L18,16.411l3.705-3.705a1.124,1.124,0,1,1,1.589,1.589L19.589,18l3.705,3.705a1.129,1.129,0,0,1,0,1.589A1.116,1.116,0,0,1,21.705,23.295Z" transform="translate(-3.375 -3.375)"></path>
+          </svg>
+      </a>
+      <div class="modal-body">
+         <iframe src="https://seller.indiamart.com/" width="100%" height="100%" style="border: none;"></iframe>
+      </div>
+      
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript" src="<?php echo assets_url(); ?>js/jquery.nice-select.js"></script>
+<script src="<?php echo assets_url();?>js/jquery.matchHeight-min.js"></script>
+<script src="<?php echo assets_url();?>js/custom/dashboard/report_v2.js?v=<?php echo rand(0,1000); ?>"></script>
+<link rel="stylesheet" href="<?php echo assets_url();?>css/jquery.mCustomScrollbar.css">
+<script src="<?php echo assets_url();?>js/jquery.mCustomScrollbar.concat.min.js"></script>
+<link rel="stylesheet" href="<?php echo assets_url();?>css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="<?php echo assets_url();?>css/rowReorder.dataTables.min.css">
+<link rel="stylesheet" href="<?php echo assets_url();?>css/responsive.dataTables.min.css">
+<script src="<?php echo assets_url();?>js/jquery.dataTables.min.js"></script>
+<script src="<?php echo assets_url();?>js/dataTables.rowReorder.min.js"></script>
+<script src="<?php echo assets_url();?>js/dataTables.responsive.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="<?php echo assets_url();?>css/fixedHeader.dataTables.min.css">
+<script src="<?php echo assets_url();?>js/dataTables.fixedHeader.min.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<script type="text/javascript" src="<?php echo assets_url();?>js/fecha.min.js"></script>
+<script src="<?php echo assets_url();?>js/hotel-datepicker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
+<script src="<?php echo assets_url();?>js/datePicker.js"></script>
+<script type="text/javascript">
+
+function getMonthYear(m_count) {
+  var month = new Array();
+  month[1] = "Jan.";
+  month[2] = "Feb.";
+  month[3] = "Mar.";
+  month[4] = "Apr.";
+  month[5] = "May";
+  month[6] = "June";
+  month[7] = "July";
+  month[8] = "Aug.";
+  month[9] = "Sept.";
+  month[10] = "Oct.";
+  month[11] = "Nov.";
+  month[12] = "Dec.";   
+  return month[m_count];
+}
+var getDaysInMonth = function(month,year) {
+  // Here January is 1 based
+  //Day 0 is the last day in the previous month
+ return new Date(year, month, 0).getDate();
+// Here January is 0 based
+// return new Date(year, month+1, 0).getDate();
+};
+
+ $(document).ready(function(){  
+
+   var loadCount = 1;
+    update_top_selling_produts = function(){
+      loadCount++;
+      checkCount();
+    }
+    update_latest_sales_orders = function(){
+      
+      loadCount++;
+      checkCount();
+    }
+    checkCount = function(){
+      
+      if(loadCount == 3){
+         //alert('loadCount');
+         //$('.same-height-top').matchHeight();
+         var hA = $('#show_top_selling_produts').parent().height();
+         var hB = $('#show_latest_sales_orders').parent().height();
+         console.log(hA+' : '+hB);
+         if(hA < hB){
+            hA = hB+15;
+         }
+         console.log('FINAL: '+hA);
+         $('#show_top_selling_produts').parent().css({'height': hA+30+'px'}).addClass('sporel');
+         $('#show_latest_sales_orders').parent().css({'height': hA+30+'px'}).addClass('sporel-987');
+      }
+    }
+    ////
+    updateAfterLoadTopPerformersMonth = function(){
+      $('#performers-carousel').owlCarousel({
+         loop:false,
+         margin:30,
+         nav:false,
+         dots:false,
+         responsive:{
+            0:{
+              items:1
+            },
+            600:{
+              items:3
+            },
+            1000:{
+              items:5
+            }
+         }
+       })
+      ////
+      $('#show_top_performers_of_month_data .user-details-block').matchHeight();
+    }
+    /////
+    updateAfterLoad = function() {
+         //var pH = $('.funel-wapper').innerHeight();
+         var pH = $('#show_lead_pipeline_data').innerHeight() - 10;
+         //var pH = 450;
+         var childCount = $('#show_lead_pipeline_data .funel-wapper > div').size();
+         var childHeight = pH/childCount;
+         
+         //$(".content").mCustomScrollbar();
+         if(childCount > 7){
+            $('.funel-wapper > div').css({'height': 52});
+            //alert(childCount);
+            $('.content#show_lead_pipeline_data').mCustomScrollbar({
+               //theme: "minimal-dark",
+               alwaysShowScrollbar: 1
+            });
+         }else{
+            $('.funel-wapper > div').css({'height': childHeight});
+         }
+         $('.responsive-table').mCustomScrollbar({
+         //theme: "minimal-dark",
+         //alwaysShowScrollbar: 1
+         axis: 'x'
+         });
+      };
+      //.responsive-table
+
+      //same-height
+      $('.new_lead_scroll').mCustomScrollbar({
+       theme: "minimal-dark",
+       alwaysShowScrollbar: 1
+      });
+      
+      $( ".date-input" ).datepicker();
+      $('.same-height').matchHeight();
+      ////
+
+      ////
+      function getDays(getVal){
+       //2021-03-09 / 2021-03-16 
+       var res = getVal.split(" / ");
+       var future = moment(res[1]);
+       var start = moment(res[0]);
+       var d = future.diff(start, 'days'); // 9
+       //alert(d);
+       return d;
+      }
+      //getDays()
+      var today = new Date();
+       var dd = String(today.getDate()).padStart(2, '0');
+       var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+       var yyyy = today.getFullYear();
+       var startdate = '2021-01-01';
+       today = yyyy + '-' + mm + '-' + dd;
+
+       
+      // ======================================================     
+
+
+      // USER ACTIVITY REPORT START =================================
+      var input = document.getElementById('date_range_user_define_uar_v2');
+      var datepicker = new HotelDatepicker(input, {
+          startDate: startdate,
+          format: 'YYYY-MM-DD',
+          separator: ' to ',
+          endDate: today,
+          autoClose: false,
+          onSelectRange: function() {
+        
+            }
+         });
+      input.addEventListener('afterClose', function () {
+            var getVal = $('#date_range_user_define_uar_v2').val();
+            var dateRangeArr = getVal.split("to");
+            var fromDate=dateRangeArr[0];
+            var toDate=dateRangeArr[1]; 
+            var fromDateDisplayFormat=moment(fromDate, 'YYYY-MM-DD').format('DD-MMM-YYYY'); 
+            var toDateDisplayFormat=moment(toDate, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+          if(getVal.length > 3)
+          {               
+             //var gD = getDays(getVal);
+             $("#date_range_pre_define_uar_v2").val($("#date_range_pre_define_uar_v2 option:first").val());
+             $('#show_daterange_html_uar_v2').html('( '+fromDateDisplayFormat+' to '+toDateDisplayFormat+' )');
+             $("#date_range_user_define_from_uar_v2").val(fromDateDisplayFormat);
+             $("#date_range_user_define_to_uar_v2").val(toDateDisplayFormat);
+             load_user_activity_report_v2(1);
+          }
+      }, false);
+
+
+      $("body").on("change","#date_range_pre_define_uar_v2",function(e){
+         var date_range_pre_define_text=$('#date_range_pre_define_uar_v2 option:selected').text();    
+         $('#show_daterange_html_uar_v2').html('( '+date_range_pre_define_text+' )');
+         load_user_activity_report_v2(1);
+      });
+
+      // USER ACTIVITY REPORT END =================================
+
+
+      // USER DAILY SALES REPORT START =================================
+      var input = document.getElementById('date_range_user_define_dsr');
+      var datepicker = new HotelDatepicker(input, {
+          startDate: startdate,
+          format: 'YYYY-MM-DD',
+          separator: ' to ',
+          endDate: today,
+          autoClose: false,
+          onSelectRange: function() {
+        
+            }
+         });
+      input.addEventListener('afterClose', function () {
+            var getVal = $('#date_range_user_define_dsr').val();
+            var dateRangeArr = getVal.split("to");
+            var fromDate=dateRangeArr[0];
+            var toDate=dateRangeArr[1]; 
+            var fromDateDisplayFormat=moment(fromDate, 'YYYY-MM-DD').format('DD-MMM-YYYY'); 
+            var toDateDisplayFormat=moment(toDate, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+          if(getVal.length > 3)
+          {               
+             //var gD = getDays(getVal);
+             $("#date_range_pre_define_dsr").val($("#date_range_pre_define_dsr option:first").val());
+             $('#show_daterange_html_dsr').html('( '+fromDateDisplayFormat+' to '+toDateDisplayFormat+' )');
+             $("#date_range_user_define_from_dsr").val(fromDateDisplayFormat);
+             $("#date_range_user_define_to_dsr").val(toDateDisplayFormat);
+             load_daily_sales_report_v2(1);
+          }
+      }, false);
+
+
+      $("body").on("change","#date_range_pre_define_dsr",function(e){
+         var date_range_pre_define_text=$('#date_range_pre_define_dsr option:selected').text();    
+         $('#show_daterange_html_dsr').html('( '+date_range_pre_define_text+' )');
+         load_daily_sales_report_v2(1);
+      });
+
+      // USER DAILY SALES REPORT END =================================
+
+      // =============================================================
+      // LEADS BY SOURCE REPORT
+
+      var input = document.getElementById('date_range_user_define_lbs');
+      var datepicker = new HotelDatepicker(input, {
+          startDate: startdate,
+          format: 'YYYY-MM-DD',
+          separator: ' to ',
+          endDate: today,
+          autoClose: false,
+          onSelectRange: function() {
+        
+            }
+         });
+         input.addEventListener('afterClose', function () {
+            var getVal = $('#date_range_user_define_lbs').val();
+            var dateRangeArr = getVal.split("to");
+            var fromDate=dateRangeArr[0];
+            var toDate=dateRangeArr[1]; 
+            var fromDateDisplayFormat=moment(fromDate, 'YYYY-MM-DD').format('DD-MMM-YYYY'); 
+            var toDateDisplayFormat=moment(toDate, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+          if(getVal.length > 3)
+          {               
+             //var gD = getDays(getVal);
+             $("#date_range_pre_define_lbs").val($("#date_range_pre_define_lbs option:first").val());
+             $('#show_daterange_html_lbs').html('( '+fromDateDisplayFormat+' to '+toDateDisplayFormat+' )');
+             $("#date_range_user_define_from_lbs").val(fromDateDisplayFormat);
+             $("#date_range_user_define_to_lbs").val(toDateDisplayFormat);
+             load_lead_by_source_report();
+          }
+      }, false);
+
+      $("body").on("change","#date_range_pre_define_lbs",function(e){
+         var date_range_pre_define_text=$('#date_range_pre_define_lbs option:selected').text();    
+         $('#show_daterange_html_lbs').html('( '+date_range_pre_define_text+' )');
+         load_lead_by_source_report();
+      });
+      // LEADS BY SOURCE REPORT
+      // =============================================================
+      
+      // =============================================================
+      // Top Selling Produts
+
+      var input = document.getElementById('date_range_user_define_tsp');
+      var datepicker = new HotelDatepicker(input, {
+          startDate: startdate,
+          format: 'YYYY-MM-DD',
+          separator: ' to ',
+          endDate: today,
+          autoClose: false,
+          onSelectRange: function() {
+        
+            }
+         });
+      input.addEventListener('afterClose', function () {
+         var getVal = $('#date_range_user_define_tsp').val();
+         var dateRangeArr = getVal.split("to");
+         var fromDate=dateRangeArr[0];
+         var toDate=dateRangeArr[1]; 
+         var fromDateDisplayFormat=moment(fromDate, 'YYYY-MM-DD').format('DD-MMM-YYYY'); 
+         var toDateDisplayFormat=moment(toDate, 'YYYY-MM-DD').format('DD-MMM-YYYY');
+            
+         if(getVal.length > 3)
+         {               
+            //var gD = getDays(getVal);
+            $("#date_range_pre_define_tsp").val($("#date_range_pre_define_tsp option:first").val());
+            $('#show_daterange_html_tsp').html('( '+fromDateDisplayFormat+' to '+toDateDisplayFormat+' )');
+            $("#date_range_user_define_from_tsp").val(fromDateDisplayFormat);
+            $("#date_range_user_define_to_tsp").val(toDateDisplayFormat);
+            load_top_selling_produts();
+         }
+      }, false);
+      $("body").on("change","#date_range_pre_define_tsp",function(e){
+         var date_range_pre_define_text=$('#date_range_pre_define_tsp option:selected').text();    
+         $('#show_daterange_html_tsp').html('( '+date_range_pre_define_text+' )');         
+         load_top_selling_produts();
+      });
+      // Top Selling Produts
+      // ==============================================================
+
+
+      // ==================================================
+
+      $(".open-calendar").click(function(event){
+          event.preventDefault();
+          //alert("The paragraph was clicked.");
+          //datepicker.open();
+          $(this).parent().find('input').click();
+
+       });  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+      //performers-carousel
+      $('#performers-carousel').owlCarousel({
+         loop:false,
+         margin:30,
+         nav:true,
+         dots:false,
+         responsive:{
+            0:{
+               items:1
+            },
+            600:{
+               items:3
+            },
+            1000:{
+               items:5
+            }
+         }
+      })
+      $('.ol-prev').click(function(event) {
+         event.preventDefault();
+         var owl = $('#performers-carousel');
+         owl.trigger('prev.owl.carousel');
+      })
+      $('.ol-next').click(function(event) {
+         event.preventDefault();
+         var owl = $('#performers-carousel');
+         owl.trigger('next.owl.carousel');
+      })
+	  
+
+
+      // $( '.opportunity-block' ).each(function( index ) {
+      //    var getV = $(this).find('.opportunity-process-bar').attr('data-content');
+      //    //$(this).find('.opportunity-process-bar').css({'width':getV+'%'});
+      //    $(this).find('.opportunity-process-bar').animate({
+      //       width: getV+'%'
+      //    }, 1500, function() {
+      //       // Animation complete.
+      //    });
+      // });
+
+
+
+
+      //two-chart-container
+      $.fn.matchHeight._afterUpdate = function(event, groups) {
+         
+         //opportunity-outer
+         var pHO = $('.opportunity-outer').parent().innerHeight();
+         var childCountO = $('.opportunity-outer > div').size();
+         var childHeightO = pHO/childCountO;
+         $('.opportunity-outer > div').css({'height': childHeightO});
+         /////
+
+         
+      }
+      
+
+         
+
+
+      /////////////////////
+            
+    });
+	
+	
+</script>

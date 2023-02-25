@@ -1,0 +1,460 @@
+<?php
+$meeting_schedule_start_date = date("Y-m-d", strtotime($row['meeting_schedule_start_datetime']));
+?>
+<form id="MeetingFrm" name="MeetingFrm">
+<input type="hidden" name="id" id="id" value="<?php echo $id; ?>" />
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-body">
+            <a href="#" class="close-modal" data-dismiss="modal" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="29.25" height="29.25" viewBox="0 0 29.25 29.25">
+                    <path id="Icon_ionic-ios-close-circle" data-name="Icon ionic-ios-close-circle" d="M18,3.375A14.625,14.625,0,1,0,32.625,18,14.623,14.623,0,0,0,18,3.375Zm3.705,19.92L18,19.589l-3.705,3.705a1.124,1.124,0,1,1-1.589-1.589L16.411,18l-3.705-3.705a1.124,1.124,0,0,1,1.589-1.589L18,16.411l3.705-3.705a1.124,1.124,0,1,1,1.589,1.589L19.589,18l3.705,3.705a1.129,1.129,0,0,1,0,1.589A1.116,1.116,0,0,1,21.705,23.295Z" transform="translate(-3.375 -3.375)"></path>
+                </svg>
+            </a> 
+            <?php //print_r($row); ?>               
+            <div class="schedule-outer">
+                <h2><?php echo ($row['cust_company_name'])?$row['cust_company_name']:$row['cust_contact_person']; ?></h2>
+                <div class="row">
+                    <?php if($status==1 || $status==5){ // Pending / Reshedule?>
+                        <div class="col-md-10">
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Mode of Meeting:</strong> <?php echo ($row['meeting_type']=='P')?'Visit':'Online'; ?>
+                            </div>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting with:</strong> <?php echo ($row['meeting_with_before_checkin_time'])?$row['meeting_with_before_checkin_time']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting assigned to:</strong> <?php echo ($row['meeting_assigned_to'])?$row['meeting_assigned_to']:'-'; ?>
+                            </div>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting date:</strong> <?php echo ($row['meeting_schedule_start_datetime'])?datetime_db_format_to_display_format_ampm($row['meeting_schedule_start_datetime']):'-'; ?>
+                            </div> 
+                            <?php if($row['meeting_type']=='P'){ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Venue:</strong> <?php echo ($row['meeting_venue'])?$row['meeting_venue']:'-'; ?>
+                            </div>
+                            <?php }else{ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting URL:</strong> <?php echo ($row['meeting_url'])?$row['meeting_url']:'-'; ?>
+                            </div>
+                            <?php } ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Purpose of Meeting:</strong> <?php echo ($row['meeting_agenda_type_name'])?$row['meeting_agenda_type_name']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Remarks:</strong> <?php echo ($row['meeting_Purpose'])?$row['meeting_Purpose']:'-'; ?>
+                            </div>                        
+                        </div>
+                        <div class="col-md-2">                            
+                            <div class="form-group row pull-right">
+                                <div class="col-md-12">
+                                <span class="alert-md text-uppercase alert-primary pull-right"><?php echo $row['status']; ?></span>
+                                </div>
+                            </div>        
+                        </div>
+                    <?php }else if($status==3){ // Finished?>
+                        <div class="col-md-10">
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Mode of Meeting:</strong> <?php echo ($row['meeting_type']=='P')?'Visit':'Online'; ?>
+                            </div>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Met with:</strong> <?php echo ($row['meeting_with_at_checkin_time'])?$row['meeting_with_at_checkin_time']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting done by:</strong> <?php echo ($row['meeting_assigned_to'])?$row['meeting_assigned_to']:'-'; ?>
+                            </div>
+                            <?php if($row['self_visited_or_visited_with_colleagues']=='C'){ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Visited with Colleague(s):</strong> <?php echo ($row['visited_colleagues'])?$row['visited_colleagues']:'-'; ?>
+                            </div>
+                            <?php } ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting done date:</strong> <?php echo ($row['checkin_datetime'])?datetime_db_format_to_display_format_ampm($row['checkin_datetime']):'-'; ?>
+                            </div> 
+                            <?php if($row['meeting_type']=='P'){ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Venue:</strong> <?php echo ($row['meeting_venue'])?$row['meeting_venue']:'-'; ?>
+                            </div>
+                            <?php }else{ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting URL:</strong> <?php echo ($row['meeting_url'])?$row['meeting_url']:'-'; ?>
+                            </div>
+                            <?php } ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Purpose of Meeting:</strong> <?php echo ($row['meeting_agenda_type_name'])?$row['meeting_agenda_type_name']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Minutes of meeting:</strong> <?php echo ($row['discussion_points'])?$row['discussion_points']:'-'; ?>
+                            </div>  
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting Updated On:</strong> <?php echo datetime_db_format_to_display_format_ampm($row['updated_at']); ?>
+                            </div>                      
+                        </div>
+                        <div class="col-md-2">                            
+                            <div class="form-group row pull-right">
+                                <div class="col-md-12">
+                                <span class="alert-md text-uppercase alert-success pull-right"><?php echo $row['status']; ?></span>
+                                </div>
+                            </div>        
+                        </div>
+                    <?php }else if($status==4){ // Cancelled?>
+                        <div class="col-md-10">
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Mode of Meeting:</strong> <?php echo ($row['meeting_type']=='P')?'Visit':'Online'; ?>
+                            </div>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Met with:</strong> <?php echo ($row['meeting_with_at_checkin_time'])?$row['meeting_with_at_checkin_time']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting done by:</strong> <?php echo ($row['meeting_assigned_to'])?$row['meeting_assigned_to']:'-'; ?>
+                            </div>
+                            <?php if($row['self_visited_or_visited_with_colleagues']=='C'){ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Visited with Colleague(s):</strong> <?php echo ($row['visited_colleagues'])?$row['visited_colleagues']:'-'; ?>
+                            </div>
+                            <?php } ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting done date:</strong> <?php echo ($row['checkin_datetime'])?datetime_db_format_to_display_format_ampm($row['checkin_datetime']):'-'; ?>
+                            </div> 
+                            <?php if($row['meeting_type']=='P'){ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Venue:</strong> <?php echo ($row['meeting_venue'])?$row['meeting_venue']:'-'; ?>
+                            </div>
+                            <?php }else{ ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting URL:</strong> <?php echo ($row['meeting_url'])?$row['meeting_url']:'-'; ?>
+                            </div>
+                            <?php } ?>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Purpose of Meeting:</strong> <?php echo ($row['meeting_agenda_type_name'])?$row['meeting_agenda_type_name']:'-'; ?>
+                            </div> 
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Reason For Cancellation:</strong> <?php echo ($row['cancellation_reason'])?$row['cancellation_reason']:'-'; ?>
+                            </div>
+                            <div class="form-group schedule-time mb-0">
+                                <strong>Meeting Updated On:</strong> <?php echo datetime_db_format_to_display_format_ampm($row['updated_at']); ?>
+                            </div>
+                        </div>
+                        <div class="col-md-2">                            
+                            <div class="form-group row pull-right">
+                                <div class="col-md-12">
+                                <span class="alert-md text-uppercase alert-danger pull-right"><?php echo $row['status']; ?></span>
+                                </div>
+                            </div>        
+                        </div>
+                    <?php } ?>                    
+                </div>
+                 
+                <?php /* ?>        
+                <div class="form-group schedule-date row">
+                    <div class="col-md-12">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-cal-icon.png">
+                            </div>
+                            <div class="m-filed">
+                                <input type="text" readonly="true" class="default-input display_date" name="meeting_schedule_start_datetime" id="meeting_schedule_start_datetime" value="<?php echo ($row['meeting_schedule_start_datetime'])?date_db_format_to_display_format($row['meeting_schedule_start_datetime']):'-'; ?>" data-existing_value="<?php echo ($row['meeting_schedule_start_datetime'])?date_db_format_to_display_format($row['meeting_schedule_start_datetime']):'-'; ?>"  disabled>
+                            </div>
+                            <?php if($row['status_id']=='1'){ ?>
+                            <a href="JavaScript:void(0);" class="m-edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <?php } ?>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-time-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <input type="text" readonly="true" name="meeting_schedule_start_time" id="meeting_schedule_start_time" value="<?php echo ($row['meeting_schedule_start_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_start_datetime']):'-'; ?>" data-existing_value="<?php echo ($row['meeting_schedule_start_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_start_datetime']):'-'; ?>" class="default-input time_element" disabled >
+                                </div>
+                                <div class="m-auto">-</div>
+                                <div class="m-auto">
+                                    <input type="text" readonly="true" name="meeting_schedule_end_time" id="meeting_schedule_end_time" value="<?php echo ($row['meeting_schedule_end_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_end_datetime']):'-'; ?>" data-existing_value="<?php echo ($row['meeting_schedule_end_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_end_datetime']):'-'; ?>" class="default-input time_element" disabled >
+                                </div>
+                            </div>
+                            <?php if($row['status_id']=='1'){ ?>
+                            <a href="JavaScript:void(0);" class="m-edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <?php */ ?>
+                
+                <?php if($status==1 || $status==5){ ?>                
+                <div class="form-group row">
+                    <div class="col-auto mr-15">
+                        <a href="#" class="m-icon update-meeting">
+                            <span><img src="<?php echo assets_url(); ?>images/update-icon.png"></span>
+                            <span>Dispose Meeting</span>
+                        </a>
+                    </div>
+                    <?php if($meeting_schedule_start_date>=date("Y-m-d")){ ?>
+                    <div class="col-auto mr-15">
+                        <a href="JavaScript:void(0)" class="m-icon meeting_schedule_view_popup" id="<?php echo $row['id']; ?>" data-leadid="<?php echo $row['lead_id']; ?>" data-cid="<?php echo $row['customer_id']; ?>" >
+                            <span><img src="<?php echo assets_url(); ?>images/update-icon.png"></span>
+                            <span>Reshedule Meeting</span>
+                        </a>
+                    </div>
+                    <?php } ?>
+                    <div class="col-auto">
+                        <a href="#" class="m-icon cancel-meeting">
+                            <span><img src="<?php echo assets_url(); ?>images/cancel-icon.png"></span>
+                            <span>Cancel Meeting</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="update-meeting-block">
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <div class="form-flex">
+                                <label>Meeting done date</label>
+                                <div class="w-auto">
+                                <input type="text" readonly="true" class="default-input display_date" name="checkin_date" id="checkin_date" value="<?php echo ($row['meeting_schedule_start_datetime'])?date_db_format_to_display_format($row['meeting_schedule_start_datetime']):'-'; ?>" data-existing_value="<?php echo ($row['meeting_schedule_start_datetime'])?date_db_format_to_display_format($row['meeting_schedule_start_datetime']):'-'; ?>" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <div class="form-flex">
+                                <label>Check-in Time</label>
+                                <div class="w-auto">
+                                    <input type="text" class="default-input time_element" name="checkin_time" id="checkin_time" placeholder="_ _:_ _ : AM" value="<?php echo ($row['meeting_schedule_start_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_start_datetime']):''; ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="form-flex">
+                            <label>Check-out Time</label>
+                            <div class="w-auto">
+                                <input type="text" class="default-input time_element" name="checkout_time" id="checkout_time" placeholder="_ _:_ _ : AM" value="<?php echo ($row['meeting_schedule_end_datetime'])?time_db_format_to_display_format_ampm($row['meeting_schedule_end_datetime']):''; ?>">
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>Met with:</label>
+                            <div class="w-100">
+                            <input type="text" class="default-input " name="meeting_with_at_checkin_time" id="meeting_with_at_checkin_time" placeholder="" value="<?php echo ($row['meeting_with_before_checkin_time'])?$row['meeting_with_before_checkin_time']:''; ?>">
+                                <?php /* ?> <select class="default-select" id="meeting_with_at_checkin_time" name="meeting_with_at_checkin_time">
+                                    <?php if($cus_data->contact_person){ ?>
+                                    <option value="<?php echo $cus_data->contact_person; ?>"><?php echo $cus_data->contact_person; ?></option>
+                                    <?php } ?>
+                                    <?php if(count($contact_persion_list)){ ?>
+                                        <?php foreach($contact_persion_list AS $contact_persion){ ?>
+                                        <option value="<?php echo $contact_persion['name']; ?>"><?php echo $contact_persion['name']; ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </select>   <?php */ ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-flex-auto">
+                        <div class="col-flex-auto">
+                            <label class="default-checkbox">Self Visit
+                                <input type="radio" name="self_visited_or_visited_with_colleagues" checked="checked" value="S">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="col-md-auto">
+                            <label class="default-checkbox">Visited with Colleagues 
+                                <input type="radio" name="self_visited_or_visited_with_colleagues" value="C">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row visited_colleagues_div hide" >
+                        <div class="col-md-12">
+                            <label>Colleagues:</label>
+                            <div class="w-100">
+                                <select class="default-select" id="visited_colleagues" name="visited_colleagues[]" multiple>
+                                    <?php if(count($user_list)){ ?>
+                                        <?php foreach($user_list AS $user){ ?>
+                                        <option value="<?php echo $user['id']; ?>"><?php echo $user['name']; ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </select>   
+                            </div>
+                        </div>
+                    </div>
+                                            
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <label>Discussion Points:</label>
+                            <div class="w-100">
+                                <textarea class="default-textarea" id="discussion_points" name="discussion_points"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-100 d-inline-block border-top-grey pt-25">
+                    <a href="JavaScript:void(0)" class="lead-btn orange pull-right update-lead" id="meeting_finished_confirm">SUBMIT</a>
+                    </div>
+                </div>
+                <div class="cancel-meeting-block">
+                    <hr>
+                    <div class="form-group row">
+                    <div class="col-md-12">
+                        <label>Reason For  Cancellation:</label>
+                        <div class="w-100">
+                            <textarea class="default-textarea" name="cancellation_reason" id="cancellation_reason"></textarea>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="w-100 d-inline-block border-top-grey pt-25">
+                    <a href="JavaScript:void(0)" class="lead-btn orange pull-right cancel-meeting-btn" id="meeting_cancelled_confirm">SUBMIT</a>
+                    </div>
+                </div>
+
+                <?php }else if($status==3){ ?>                
+                    <?php /* ?> <div class="form-group row">
+                    <div class="col-md-12">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-time-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <span>Check-in Time</span>
+                                </div>
+                                <div class="m-auto">
+                                    <input type="text" name="" value="<?php echo ($row['checkin_datetime'])?time_db_format_to_display_format_ampm($row['checkin_datetime']):'-'; ?>" class="default-input" disabled="">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-time-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <span>Check-out Time</span>
+                                </div>
+                                <div class="m-auto">
+                                    <input type="text" name="" value="<?php echo ($row['checkout_datetime'])?time_db_format_to_display_format_ampm($row['checkout_datetime']):'-'; ?>" class="default-input" disabled="">
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-time-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <span>Actual Meeting With</span>
+                                </div>
+                                <div class="m-auto">
+                                    <?php echo ($row['meeting_with_at_checkin_time'])?$row['meeting_with_at_checkin_time']:'-'; ?>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-15">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/event-time-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <span>Visited With</span>
+                                </div>
+                                <div class="m-auto">
+                                    <?php echo ($row['self_visited_or_visited_with_colleagues']=='S')?'Self':$row['visited_colleagues']; ?>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mr-15">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/file-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <a href="#" class="mPoints"><span>Discussion Points</span> <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="mPointsDetails">
+                            <div class="point-area"><?php echo $row['discussion_points']; ?></div>
+                        </div>
+
+                    </div>
+                </div> <?php */ ?>
+                
+                <?php }else if($status==4){ ?>                
+                    <?php /* ?> <div class="form-group row">
+                    <div class="col-md-12 mr-15">
+                        <div class="m-row-flex">
+                            <div>
+                                <img src="<?php echo assets_url(); ?>images/file-icon.png">
+                            </div>
+                            <div class="m-filed mil">
+                                <div class="m-auto">
+                                    <a href="#" class="mCancelledPoints"><span>Reason of Cancelled</span> <i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="mCancelledPointsDetails">
+                            <div class="point-area"><?php echo $row['cancellation_reason']; ?></div>
+                        </div>
+
+                    </div>
+                </div> <?php */ ?>
+                <?php } ?>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+<!-- <link rel="stylesheet" type="text/css" href="<?php echo assets_url(); ?>css/timepicki.css">
+<script src="<?php echo assets_url(); ?>js/timepicki.js"></script> -->
+<link rel="stylesheet" href="<?=assets_url();?>plugins/bootstrap-multiselect/bootstrap-multiselect.css">
+<script src="<?php echo assets_url(); ?>plugins/bootstrap-multiselect/bootstrap-multiselect.js" type="text/javascript"></script>
+<script>
+    
+    $('.display_date').datepicker({
+      dateFormat: "dd-M-yy",
+      changeMonth: true,
+      changeYear: true,
+      yearRange: '-100:+5'
+    });
+    $('input[type=radio][name=self_visited_or_visited_with_colleagues]').on('change', function() {
+        var getVal = $(this).val();        
+        if(getVal == 'S'){
+            $('.visited_colleagues_div').addClass('hide');
+        }else{
+            $('.visited_colleagues_div').removeClass('hide');
+        }
+        // updateTimeSlot()
+    });
+    $('#visited_colleagues').multiselect({
+      buttonClass:'custom-multiselect',
+      includeSelectAllOption:true
+    });
+</script>

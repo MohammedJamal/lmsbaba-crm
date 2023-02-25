@@ -1,0 +1,213 @@
+*{
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+
+.wrapper-ar {
+	width: 80%;
+	margin: 0 auto;
+	border: 1px solid #ccc;
+	padding: 35px;
+}
+
+
+body {
+/*font-size: 17px;*/
+font-size: 13px; 
+font-family: 'roboto', sans-serif;
+font-weight: 400; line-height: 22px; color: #000 !important;
+}
+p{color: #000 !important}
+/*.header-border tr {
+border: solid 1px #000;
+}*/
+td span{
+  font-weight: 400;
+}
+.header-border,
+.header-border td,
+ {
+border: 1px solid #222;
+}
+
+.header-border td,
+.header-border th {
+padding:0;
+text-align: center;
+font-size: 13px;
+font-weight: 600;
+color: #000;
+
+}
+/*.header-table-top{font-size: 14px;  }*/
+/*.header-table-top td{ border: solid 1px #222; }*/
+table td, table th {
+   
+    text-align: center;
+  
+    color: #000;
+   /* border: solid 1px #ececec;*/
+}
+
+/*table th{font-size: 15px;}*/
+
+/*table tr {
+border-bottom: 1px solid #f2f2f2;
+}*/
+/*.header-table tr {
+border: none;
+}*/
+
+/*table {
+border-collapse: collapse;
+}*/
+
+.header-add li{ list-style-type: none !important; list-style: none !important; }
+.header-add{list-style-type: none !important; list-style: none !important;}
+
+.header-table td, .header-table th{border: none;}
+.header-table .header-right p{ margin-bottom: 5px; }
+
+.text p{ margin-bottom: 5px; margin-top:5px; padding-left: 30px; }
+.text{ line-height: 18px;margin-bottom:15px; }
+.text h2{ font-size:13px; }
+.grand-summery table td {
+    padding: 5px;
+    text-align: center;
+
+    color: #000;
+    border: solid 1px 
+    #000;
+
+}
+.fontsize13{ font-size: 13px; }
+
+
+.table-striped.custom-table > thead > tr {
+    background-color: #e1e6f2;
+}
+.table-striped.custom-table > tbody > tr:nth-child(odd) {
+    background-color: #FFF;
+}
+.table-striped.custom-table > tbody > tr:nth-child(even) {
+    background-color: #FFF;
+}
+.table-striped.custom-table > tbody > tr:last-child,
+.table-striped.custom-table > tbody > tr.no-color {
+    background-color: #FFF;
+}
+/*.table-striped.custom-table{
+  border: 1px solid #ddd;
+}*/
+.table-striped.custom-table>thead>tr>th{
+  border-right: 1px solid #ddd;
+}
+.table-striped.custom-table>tbody>tr>td{
+  padding: 10px 10px 15px !important;
+}
+.table-striped.custom-table>tbody>tr>td:first-child {
+  border-left: 1px solid #ddd;
+}
+.table-striped.custom-table>tbody>tr>td{
+  border-right: 1px solid #ddd;
+}
+.grand-summery td {
+
+    padding: 5px !important;
+    text-align: center;
+    font-size: 13px;
+    color: #444;
+    border: solid 1px 
+    #000;
+
+}
+.table td.nopad {
+    padding-right: 0px !important;
+    padding-top: 25px !important;
+}
+.fontsize13 {
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    margin: 0;
+}
+.pdf_to{
+  font-size: 14px;
+  font-weight: 700;
+  margin: 35px 0 5px;
+}
+.pdf_to_content{
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0 0 50px 0;
+}
+.pdf_sub{
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 22px;
+  margin: 0 0 40px;
+}
+.pdf_dear{
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 5px;
+}
+.pdf_dear_content{
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0 0 30px 0;
+}
+.table-striped.custom-table>thead>tr>th{
+  font-size: 14px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.table-striped.custom-table>tbody>tr>td{
+  font-size: 14px;
+  font-weight: 400;
+  vertical-align: middle;
+}
+.table-striped.custom-table>tbody>tr>td:nth-child(2){
+  text-align: left;
+}
+.text {
+  line-height: normal;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 0 0 35px 0;
+}
+.text .fontsize13{
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+.text p {
+    margin-bottom: 5px;
+    margin-top:0px;
+    padding-left: 30px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0;
+}
+.pdf_thank{
+  margin: 5px 0 35px;
+  line-height: normal;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.pdf_thank_content{
+  line-height: normal;
+  font-size: 14px;
+  font-weight: 400;
+}
+.pdf_thank_content b{
+  line-height: normal;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+  height: auto;
+  display: inline-block;
+  margin: 0 0 10px 0;
+}
