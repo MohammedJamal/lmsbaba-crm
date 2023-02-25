@@ -6,4 +6,6 @@ application/config/config.php
 application/config/constants.php
 application/config/database.php
 assets/uploads/
+application/ci_sessions/
+application/logs/
 
